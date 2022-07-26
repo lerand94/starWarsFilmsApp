@@ -1,32 +1,37 @@
-import React from 'react';
+import React, { useState } from "react";
 
-import MoviesList from './components/MoviesList';
-import './App.css';
+import MoviesList from "./components/MoviesList";
+import "./App.css";
 
 function App() {
-  const dummyMovies = [
-    {
-      id: 1,
-      title: 'Some Dummy Movie',
-      openingText: 'This is the opening text of the movie',
-      releaseDate: '2021-05-18',
-    },
-    {
-      id: 2,
-      title: 'Some Dummy Movie 2',
-      openingText: 'This is the second opening text of the movie',
-      releaseDate: '2021-05-19',
-    },
-  ];
-
+  const [movies, setMovies] = useState([]);
+  const fetchData = () => {
+    fetch("https://swapi.py4e.com/api/films/")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        const tranformedMovies = data.results.map((movie) => {
+          return {
+            id: movie.episode_id,
+            title: movie.title,
+            openingText: movie.opening_crawl,
+            releaseDate: movie.release_date,
+          };
+        });
+        setMovies(tranformedMovies);
+      });
+  };
   return (
     <React.Fragment>
       <section>
-        <button>Fetch Movies</button>
+        <button onClick={fetchData}>Fetch Movies</button>
       </section>
-      <section>
-        <MoviesList movies={dummyMovies} />
-      </section>
+      {movies.length > 0 ? (
+        <section>
+          <MoviesList movies={movies} />
+        </section>
+      ) : null}
     </React.Fragment>
   );
 }
