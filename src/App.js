@@ -5,23 +5,20 @@ import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const fetchData = () => {
-    fetch("https://swapi.py4e.com/api/films/")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        const tranformedMovies = data.results.map((movie) => {
-          return {
-            id: movie.episode_id,
-            title: movie.title,
-            openingText: movie.opening_crawl,
-            releaseDate: movie.release_date,
-          };
-        });
-        setMovies(tranformedMovies);
-      });
-  };
+  async function fetchData() {
+    const response = await fetch("https://swapi.py4e.com/api/films/");
+    const data = await response.json();
+
+    const tranformedMovies = data.results.map((movie) => {
+      return {
+        id: movie.episode_id,
+        title: movie.title,
+        openingText: movie.opening_crawl,
+        releaseDate: movie.release_date,
+      };
+    });
+    setMovies(tranformedMovies);
+  }
   return (
     <React.Fragment>
       <section>
